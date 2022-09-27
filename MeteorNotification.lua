@@ -21,8 +21,8 @@ Notifications.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Holder.Name = "Holder"
 Holder.Parent = Notifications
 Holder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Holder.BackgroundTransparency = 1.000
-Holder.Position = UDim2.new(0.83, 0, 0, 0)
+Holder.BackgroundTransparency = 1.0
+Holder.Position = UDim2.new(0.832, 0, 0, 0)
 Holder.Size = UDim2.new(0, 296, 1, 0)
 
 UIListLayout.Parent = Holder
@@ -59,8 +59,8 @@ end
     Notification.Parent = game:GetService'CoreGui':FindFirstChild'Notifications':FindFirstChild'Holder'
     Notification.BackgroundColor3 = backgroundcolor
     Notification.Position = UDim2.new(0, 0, 1, 0)
-    Notification.Size = UDim2.new(0, 200, 0, 82)
-    Notification.BackgroundTransparency = 1
+    Notification.Size = UDim2.new(0, 200, 0, 85)
+    Notification.BackgroundTransparency = 0.8
 
     UICorner.CornerRadius = UDim.new(0, 10)
     UICorner.Parent = Notification
@@ -107,7 +107,7 @@ end
     Arrow.BackgroundTransparency = 1.000
     Arrow.Position = UDim2.new(0.901694894, 0, 0.073170729, 0)
     Arrow.Size = UDim2.new(0, 24, 0, 23)
-  --  Arrow.Image = "rbxassetid://9733495142"
+   -- Arrow.Image = "rbxassetid://9733495142"
     Arrow.ScaleType = Enum.ScaleType.Fit
     Arrow.ImageTransparency = 1 
     Arrow.ImageColor3 = overides
@@ -117,7 +117,7 @@ end
     UIPadding.PaddingLeft = UDim.new(0, 20)
 
 local function makeVis()
-  TweenService:Create(Notification,TweenInfo.new(.5), { BackgroundTransparency = 0 }):Play()
+  TweenService:Create(Notification,TweenInfo.new(.5), { BackgroundTransparency = 0.14 }):Play()
   TweenService:Create(Title,TweenInfo.new(.5), { TextTransparency = 0 }):Play()
   TweenService:Create(Description,TweenInfo.new(.5), { TextTransparency = 0 }):Play()
   TweenService:Create(deboucne,TweenInfo.new(.5), { BackgroundTransparency = 1 }):Play()
