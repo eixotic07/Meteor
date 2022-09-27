@@ -409,6 +409,7 @@ do
     end)
     w_Screen.DisplayOrder = 939393
     w_Screen.Parent = (gethui and gethui()) or (get_hidden_gui and get_hidden_gui()) or game.CoreGui
+	ui.MainGui = w_Screen
     
     w_Backframe = instNew('Frame')
     w_Backframe.BackgroundColor3 = RLTHEMEDATA['gw'][1]
