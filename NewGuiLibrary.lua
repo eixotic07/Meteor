@@ -2960,6 +2960,9 @@ function ui:newMenu(text)
         if not Configs[text] then
             Configs[text] = {["MenuToggled"] = ""}
         end
+        if not Configs[text]["MenuToggled"] then
+            Configs[text] = {["MenuToggled"] = ""}
+        end
         if Configs[text] then
             if Configs[text]["MenuToggled"] == true then
                 M_Object:Toggle()
@@ -3234,3 +3237,4 @@ delay(5, function()
 end)
 end
 return ui
+
