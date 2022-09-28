@@ -2255,6 +2255,9 @@ end
     base_class.module_create_slider = function(self, text, args, primary) 
         text = tostring(text)
         local newval = nil
+        if not Configs[self.Name]["Extras"] then
+        Configs[self.Name]["Extras"] = {}
+        end
         if Configs[self.Name] then
             newval = Configs[self.Name]["Extras"][text]
         end
