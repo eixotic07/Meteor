@@ -1163,6 +1163,12 @@ end
             self.Selected = true
             parent.Selection = self.Name
             pcall(parent.Flags['Changed'], self.Name, self)
+
+        if Configs[self.Self.SelfName] then
+            if Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] then
+                Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] == self.Name
+            end
+        end
             
             if (parent.Primary) then
                 local n = parent.Parent.Name 
@@ -2038,6 +2044,7 @@ end
             
             D_Object.Menu = d_Menu
             D_Object.Name = text
+            D_Object.SelfName = self.Name
             D_Object.Parent = self
             D_Object.Icon = d_HeaderIcon
             D_Object.ZIndex = D_IndexOffset
@@ -2764,6 +2771,7 @@ end
             O_Object.Selected = false
             
             O_Object.Name = text
+            O_Object.Self = self
             O_Object.Parent = self
             
             O_Object.Effect = o_EnableEffect
@@ -2779,6 +2787,17 @@ end
         
         do
             print(self.Name)
+
+            if not Configs[self.SelfName] then
+                Configs[self.SelfName] = {["Keybind"] = "", ["IsToggled"] = "", ["MenuToggled"] = "", ["Extras"] = {}}
+            end
+            if Configs[self.SelfName] then
+                if Configs[self.SelfName]["Extras"]["DropdownOptions"] == O_Object.Name then
+                    O_Object:Select()
+                end
+            end
+
+
 
             o_Option.InputBegan:Connect(function(io) 
                 local uitv = io.UserInputType.Value
@@ -3250,5 +3269,4 @@ end)
 end
 
 return ui
-
 
