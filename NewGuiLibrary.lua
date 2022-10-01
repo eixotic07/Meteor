@@ -2778,6 +2778,8 @@ end
         end
         
         do
+            print(self.Name)
+
             o_Option.InputBegan:Connect(function(io) 
                 local uitv = io.UserInputType.Value
                 if (uitv == 0 or uitv == 1) then
@@ -3248,3 +3250,5 @@ end)
 end
 
 return ui
+
+
