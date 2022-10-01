@@ -1166,8 +1166,8 @@ end
 
         if Configs[self.Self.SelfName] then
             if Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] then
-                print(Configs[self.Self.SelfName]["Extras"]["DropdownOptions"])
-                --Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] == self.Name
+                Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] == self.Name
+                saveSettings()
             end
         end
             
@@ -3270,3 +3270,4 @@ end)
 end
 
 return ui
+
