@@ -1166,7 +1166,7 @@ end
 
         if Configs[self.Self.SelfName] then
             if Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] then
-                Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] == self.Name
+                Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] = self.Name
                 saveSettings()
             end
         end
