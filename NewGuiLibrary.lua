@@ -1,5 +1,4 @@
 
-
 if (Drawing == nil) then
 warn('Unfortunately, your executor is missing the Drawing library and is not supported by Meteor.')
 warn('Consider upgrading to an exploit like Fluxus or KRNL')
@@ -18,7 +17,7 @@ end
 if (not isfile("Meteor/scripts")) then
     makefolder("Meteor/scripts")
 end
-    
+local MeteorNotifications = loadstring(game:HttpGet("https://raw.githubusercontent.com/eixotic07/Meteor/main/MeteorNotification.lua"))()
 -- { Version } --
 local METEORVER = 'v0.6.3.1'
 local IndentLevel1 = 8
@@ -410,8 +409,8 @@ do
     end)
     w_Screen.DisplayOrder = 939393
     w_Screen.Parent = (gethui and gethui()) or (get_hidden_gui and get_hidden_gui()) or game.CoreGui
-	ui.MainGui = w_Screen
-    
+    ui["MainGui"] = w_Screen
+
     w_Backframe = instNew('Frame')
     w_Backframe.BackgroundColor3 = RLTHEMEDATA['gw'][1]
     w_Backframe.BackgroundTransparency = RLTHEMEDATA['gw'][2]
@@ -693,22 +692,17 @@ local base_class = {} do
     do
         base_class.menu_toggle = function(self) 
             local t = not self.MToggled
-
+            if (t) then
+                Configs[self.Name]["MenuToggled"] = true
+                saveSettings()
+            else
+                Configs[self.Name]["MenuToggled"] = false
+                saveSettings()
+            end
             
             self.MToggled = t
             self.Menu.Visible = t
             twn(self.Icon, {Rotation = t and 0 or 180}, true)
-            if Configs[self.Name] then
-            if Configs[self.Name]["MenuToggled"] == true then
-                if (t) then
-                    Configs[self.Name]["MenuToggled"] = true
-                    saveSettings()
-                else
-                    Configs[self.Name]["MenuToggled"] = false
-                    saveSettings()
-                end
-            end
-        end
         end
         base_class.menu_enable = function(self) 
             self.MToggled = true
@@ -724,157 +718,18 @@ local base_class = {} do
             return self.MToggled
         end
     end
-    -- Notificatino
-    do
-    local notifs = {}
-    local notifsounds = {
-        high = 'rbxassetid://9009664674',
-        low = 'rbxassetid://9009665420',
-        none = '',
-        warn = 'rbxassetid://9009666085'
-    }
 
-    local m_Notif
-    local m_Description
-    local m_Header
-    local m_Icon
-    local m_Text
 
-    local m_Sound
-    do 
 
-        m_Notif = instNew('Frame')
-        m_Notif.AnchorPoint = vec2(1,1)
-        m_Notif.BackgroundColor3 = RLTHEMEDATA['bo'][1]
-        m_Notif.BackgroundTransparency = RLTHEMEDATA['bo'][2]
-        m_Notif.BorderSizePixel = 0
-        m_Notif.Position = dimNew(1, 300, 1, -((#notifs*80)+((#notifs+1)*25)))
-        m_Notif.Size = dimOffset(180, 90)
-        m_Notif.ZIndex = 162
-        --m_Notif.Parent = w_Screen
-
-        stroke(m_Notif)
-
-        m_Sound = instNew('Sound')
-        --m_Sound.Playing = true
-        --m_Sound.SoundId =notifsounds[tone or 3]
-        m_Sound.Volume = 1
-        m_Sound.TimePosition = 0.1
-        --m_Sound.Parent = m_Notif 
-
-        m_Progress = instNew('Frame')
-        m_Progress.BackgroundColor3 = RLTHEMEDATA['ge'][1]
-        m_Progress.BorderSizePixel = 0
-        m_Progress.Position = dimOffset(0, 30)
-        m_Progress.Size = dimNew(1,0,0,1)
-        m_Progress.ZIndex = 163
-        --m_Progress.Parent = m_Notif
-
-        m_Header = instNew('Frame')
-        m_Header.BackgroundColor3 = RLTHEMEDATA['bm'][1]
-        m_Header.BackgroundTransparency = RLTHEMEDATA['bm'][2]
-        m_Header.BorderSizePixel = 0
-        m_Header.Size = dimNew(1,0,0,30)
-        m_Header.ZIndex = 162
-        --m_Header.Parent = m_Notif
-
-        stroke(m_Header)
-
-        m_Text = instNew('TextLabel')
-        m_Text.BackgroundTransparency = 1
-        m_Text.Font = RLTHEMEFONT
-        m_Text.Position = dimOffset(24, 0)
-        m_Text.RichText = true
-        m_Text.Size = dimNew(1, -32, 1, 0)
-        m_Text.Text = ''
-        m_Text.TextColor3 = RLTHEMEDATA['tm'][1]
-        m_Text.TextSize = 22
-        m_Text.TextStrokeColor3 = RLTHEMEDATA['to'][1]
-        m_Text.TextStrokeTransparency = 0
-        m_Text.TextXAlignment = 'Left'
-        m_Text.ZIndex = 162
-        --m_Text.Parent = m_Header
-
-        m_Description = instNew('TextLabel')
-        m_Description.BackgroundTransparency = 1
-        m_Description.Font = RLTHEMEFONT
-        m_Description.Position = dimOffset(4, 32)
-        m_Description.RichText = true
-        m_Description.Size = dimNew(1, -4, 1, -32)
-        m_Description.Text = tostring(text)
-        m_Description.TextColor3 = RLTHEMEDATA['tm'][1]
-        m_Description.TextSize = 20
-        m_Description.TextStrokeColor3 = RLTHEMEDATA['to'][1]
-        m_Description.TextStrokeTransparency = 0
-        m_Description.TextWrapped = true
-        m_Description.TextXAlignment = 'Left'
-        m_Description.TextYAlignment = 'Top'
-        m_Description.ZIndex = 162
-        --m_Description.Parent = m_Notif
-
+    function createnotification(title, text, duration)
+        MeteorNotifications(title, text, duration, "info") 
     end
-
-
-
-
-    function ui:Notify(title, text, duration, tone, warning) 
-        duration = mathClamp(duration or 2, 0.1, 30)
-
-        local m_Notif = m_Notif:Clone()
-        local m_Description = m_Description:Clone()
-        local m_Header = m_Header:Clone()
-        local m_Progress = m_Progress:Clone()
-        local m_Text = m_Text:Clone()
-        local m_Sound = m_Sound:Clone()
-
-        do
-            m_Description.Parent = m_Notif
-            m_Sound.Parent = m_Notif
-            m_Progress.Parent = m_Notif
-            m_Header.Parent = m_Notif
-
-            m_Text.Parent = m_Header
-        end do
-            m_Text.Text = title
-            m_Description.Text = text
-        end
-
-        m_Sound.SoundId = notifsounds[tone or 'none']
-        m_Sound.Playing = true
-
-    
-
-        m_Notif.Position = dimNew(1, 300, 1, -((#notifs*80)+((#notifs+1)*25)))
-        m_Notif.Parent = w_Screen
-
-        for i = 1, 25 do
-            if (m_Text.TextFits) then break end
-            m_Notif.Size += dimOffset(25, 0)
-        end
-
-
-        tabInsert(notifs, m_Notif)
-        twn(m_Notif, {Position = m_Notif.Position - dimOffset(325,0)}, true)
-        local j = ctwn(m_Progress, {Size = dimOffset(0, 1)}, duration)
-        j.Completed:Connect(function()
-            do
-                for i = 1, #notifs do 
-                    if (notifs[i] == m_Notif) then 
-                        tabRemove(notifs, i) 
-                    end 
-                end
-                for i = 1, #notifs do 
-                    twn(notifs[i], {Position = dimNew(1, -25, 1, -(((i-1)*80)+(i*25)))}, true)
-                end
-                twn(m_Notif, {Position = dimNew(1, -25, 1, 310)}, true).Completed:Wait()
-                m_Notif:Destroy()
-            end
-        end)
+    function moduleenabled(title, text, duration)
+        MeteorNotifications(title, text, duration, "toggled") 
     end
-end
-            
-            
-        
+    function moduledisabled(title, text, duration)
+        MeteorNotifications(title, text, duration, "disabled") 
+    end
 
     -- Module funcs
     do
@@ -912,16 +767,16 @@ end
                 ModListEnable(self.Name)
                 Configs[self.Name]["IsToggled"] = true
                 saveSettings()
-				if not nonoti then
-                --ui:Notify("Module toggled", self.Name .. " was toggled")
-				end
+                if not nonoti then
+                    --moduleenabled("Module Toggled", self.Name .. " was enabled", 2)
+                end
             else
                 ModListDisable(self.Name)
                 Configs[self.Name]["IsToggled"] = false
                 saveSettings()
-				if not nonoti then
-                --ui:Notify("Module disabled", self.Name .. " was disabled")
-				end
+                if not nonoti then
+                    --moduledisabled("Module Toggled", self.Name .. " was disabled", 2)
+                end
             end
             return self 
         end
@@ -1164,13 +1019,6 @@ end
             self.Selected = true
             parent.Selection = self.Name
             pcall(parent.Flags['Changed'], self.Name, self)
-
-        if Configs[self.Self.SelfName] then
-            if Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] then
-                Configs[self.Self.SelfName]["Extras"]["DropdownOptions"] = self.Name
-                saveSettings()
-            end
-        end
             
             if (parent.Primary) then
                 local n = parent.Parent.Name 
@@ -1200,8 +1048,8 @@ end
             local pval = self.PreviousVal
             
             cval = round(mathClamp(nval, min, self.Max), self.Step)
-			Configs[self.PName]["Extras"][self.Name] = cval
-			saveSettings()
+            Configs[self.PName]["Extras"][self.Name] = cval
+            saveSettings()
             
             if (pval ~= cval) then
                 pval = cval
@@ -1228,8 +1076,8 @@ end
             local pos_normalized = mathClamp(xval - self.SliderBg.AbsolutePosition.X, 0, self.SliderSize)
             
             cval = round((pos_normalized * self.RatioInverse)+min, self.Step)
-			Configs[self.PName]["Extras"][self.Name] = cval
-			saveSettings()
+            Configs[self.PName]["Extras"][self.Name] = cval
+            saveSettings()
             
             if (pval ~= cval) then
                 pval = cval
@@ -2046,7 +1894,6 @@ end
             
             D_Object.Menu = d_Menu
             D_Object.Name = text
-            D_Object.SelfName = self.Name
             D_Object.Parent = self
             D_Object.Icon = d_HeaderIcon
             D_Object.ZIndex = D_IndexOffset
@@ -2269,9 +2116,6 @@ end
     base_class.module_create_slider = function(self, text, args, primary) 
         text = tostring(text)
         local newval = nil
-        if not Configs[self.Name]["Extras"] then
-        Configs[self.Name]["Extras"] = {}
-        end
         if Configs[self.Name] then
             newval = Configs[self.Name]["Extras"][text]
         end
@@ -2404,7 +2248,7 @@ end
         local S_Object = {} do 
             S_Object.Tooltip = nil
             S_Object.Name = text
-			S_Object.PName = self.Name
+            S_Object.PName = self.Name
             
             S_Object.SliderFill = s_SliderBar
             S_Object.SliderBg = s_SliderBarBg
@@ -2773,7 +2617,6 @@ end
             O_Object.Selected = false
             
             O_Object.Name = text
-            O_Object.Self = self
             O_Object.Parent = self
             
             O_Object.Effect = o_EnableEffect
@@ -2788,19 +2631,6 @@ end
         end
         
         do
-            print(self.Name)
-
-            if not Configs[self.SelfName] then
-                Configs[self.SelfName] = {["Keybind"] = "", ["IsToggled"] = "", ["MenuToggled"] = "", ["Extras"] = {}}
-            end
-            if Configs[self.SelfName] then
-                if Configs[self.SelfName]["Extras"]["DropdownOptions"] == O_Object.Name then
-                    O_Object:Select()
-                end
-            end
-
-
-
             o_Option.InputBegan:Connect(function(io) 
                 local uitv = io.UserInputType.Value
                 if (uitv == 0 or uitv == 1) then
@@ -2988,12 +2818,7 @@ function ui:newMenu(text)
     
     
     do
-        M_Object:Toggle()
-
         if not Configs[text] then
-            Configs[text] = {["MenuToggled"] = ""}
-        end
-        if not Configs[text]["MenuToggled"] then
             Configs[text] = {["MenuToggled"] = ""}
         end
         if Configs[text] then
@@ -3256,7 +3081,7 @@ end,false,999999,Enum.KeyCode.RightShift)
 servContext:BindActionAtPriority('RL-Destroy',function(_,uis) 
     if (uis.Value == 0) then
         ui:Destroy()
-	for i,v in pairs(ui_Connections) do 
+    for i,v in pairs(ui_Connections) do 
             v:Disconnect() 
         end
     end
@@ -3269,7 +3094,4 @@ delay(5, function()
     end
 end)
 end
-
 return ui
-
-
