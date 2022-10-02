@@ -1,4 +1,5 @@
 
+
 if (Drawing == nil) then
 warn('Unfortunately, your executor is missing the Drawing library and is not supported by Meteor.')
 warn('Consider upgrading to an exploit like Fluxus or KRNL')
@@ -912,14 +913,14 @@ end
                 Configs[self.Name]["IsToggled"] = true
                 saveSettings()
 				if not nonoti then
-                ui:Notify("Module toggled", self.Name .. " was toggled")
+                --ui:Notify("Module toggled", self.Name .. " was toggled")
 				end
             else
                 ModListDisable(self.Name)
                 Configs[self.Name]["IsToggled"] = false
                 saveSettings()
 				if not nonoti then
-                ui:Notify("Module disabled", self.Name .. " was disabled")
+                --ui:Notify("Module disabled", self.Name .. " was disabled")
 				end
             end
             return self 
@@ -3270,4 +3271,5 @@ end)
 end
 
 return ui
+
 
