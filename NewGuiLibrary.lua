@@ -2122,7 +2122,7 @@ local base_class = {} do
         local newval = nil
         if Configs[self.Name] then
             if typeof(Configs[self.Name]["Extras"][text]) == "number" then
-                NewValue = tonumber(Configs[self.Name]["Extras"][text])
+                NewValue = Configs[self.Name]["Extras"][text]
             end
         end
         
