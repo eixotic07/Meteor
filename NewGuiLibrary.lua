@@ -633,7 +633,6 @@ end)
 local ModListEnable,ModListDisable,ModListInit,ModListModify do 
     local mods_instance = {}
     
-    
     ModListEnable = function(name) 
         local b = mods_instance[name]
         
@@ -671,6 +670,10 @@ local ModListEnable,ModListDisable,ModListInit,ModListModify do
         _.ZIndex = 5
         
         mods_instance[name] = _
+
+        for i,v in pairs(mods_instance) do
+            print(v)
+        end
         
         tabInsert(rgbinsts, {_,'TextColor3'})
         
@@ -2118,12 +2121,14 @@ local base_class = {} do
         text = tostring(text)
         local newval = nil
         if Configs[self.Name] then
-            newval = Configs[self.Name]["Extras"][text]
+            if typeof(Configs[self.Name]["Extras"][text]) == "number" then
+                NewValue = typeof(Configs[self.Name]["Extras"][text])
+            end
         end
         
         args['min'] = args['min'] or 0
         args['max'] = args['max'] or 100
-        args['cur'] = newval or args['cur'] or args['min']
+        args['cur'] = NewValue or args['cur'] or args['min']
         args['step'] = args['step'] or 1
         
         
