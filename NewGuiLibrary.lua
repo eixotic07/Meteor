@@ -335,7 +335,7 @@ local rgbinsts = {}
 ui["RGBColor"] = rgbinsts
 local monitor_resolution = servGui:GetScreenResolution()
 local monitor_inset = servGui:GetGuiInset()
-local SaveDataFileName = "Meteor/Configs/" .. game.PlaceId .. ".txt"
+local SaveDataFileName = "Meteor/Configs/" .. (shared.CustomSave or game.PlaceId) .. ".txt"
 local servHttp = game:GetService("HttpService")
 function saveSettings()
     local json;
