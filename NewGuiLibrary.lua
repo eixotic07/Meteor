@@ -19,7 +19,7 @@ if (not isfile("Meteor/scripts")) then
 end
 local MeteorNotifications = loadstring(game:HttpGet("https://raw.githubusercontent.com/eixotic07/Meteor/main/MeteorNotification.lua"))()
 -- { Version } --
-local METEORVER = '2.62'
+local METEORVER = '#intentratted'
 local IndentLevel1 = 8
 local IndentLevel2 = 14
 local IndentLevel3 = 22
