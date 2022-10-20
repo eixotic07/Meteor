@@ -18,7 +18,7 @@ if (not isfile("Meteor/scripts")) then
     makefolder("Meteor/scripts")
 end
 -- { Version } --
-local METEORVER = '2.98'
+local METEORVER = '3.01'
 local IndentLevel1 = 8
 local IndentLevel2 = 14
 local IndentLevel3 = 22
