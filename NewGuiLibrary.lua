@@ -1,3 +1,7 @@
+if (_G.MLOADED) then
+    return
+end
+
 
 if (Drawing == nil) then
 warn('Unfortunately, your executor is missing the Drawing library and is not supported by Meteor.')
@@ -900,32 +904,51 @@ end
                 saveSettings()
             end
         end
-        base_class.module_toggle_self = function(self, nonoti) 
-            local t = not self.OToggled
-            self.OToggled = t
+        base_class.module_toggle_self = function(self, nonoti, save) 
+            local save = save or true
+
+            if not save then
+                local t = not self.OToggled
+                self.OToggled = t
+
+                pcall(self.Flags.Toggled, t)
+                pcall(self.Flags[t and 'Enabled' or 'Disabled'])
             
+                twn(self.Effect, {Size = t and s1 or s2}, true)
             
-            pcall(self.Flags.Toggled, t)
-            pcall(self.Flags[t and 'Enabled' or 'Disabled'])
-            
-            twn(self.Effect, {Size = t and s1 or s2}, true)
-            
-            if not Configs[self.Name] then
-                Configs[self.Name] = {["Keybind"] = "", ["IsToggled"] = "", ["MenuToggled"] = "", ["Extras"] = {}}
-            end
-            if (t) then
-                ModListEnable(self.Name)
-                Configs[self.Name]["IsToggled"] = true
-                saveSettings()
-                		if not nonoti then
-                    --ui:Notify("Module toggled", self.Name .. " was toggled")
-				end
+                if not Configs[self.Name] then
+                    Configs[self.Name] = {["Keybind"] = "", ["IsToggled"] = "", ["MenuToggled"] = "", ["Extras"] = {}}
+                end
+                if (t) then
+                    ModListEnable(self.Name)
+                    Configs[self.Name]["IsToggled"] = true
+                    saveSettings()
+                else
+                    ModListDisable(self.Name)
+                    Configs[self.Name]["IsToggled"] = false
+                    saveSettings()
+                end
             else
-                ModListDisable(self.Name)
-                Configs[self.Name]["IsToggled"] = false
-                saveSettings()
-				if not nonoti then
-                    --ui:Notify("Module disabled", self.Name .. " was disabled")
+
+                local t = not self.OToggled
+                self.OToggled = t
+
+                pcall(self.Flags.Toggled, t)
+                pcall(self.Flags[t and 'Enabled' or 'Disabled'])
+            
+                twn(self.Effect, {Size = t and s1 or s2}, true)
+            
+                if not Configs[self.Name] then
+                    Configs[self.Name] = {["Keybind"] = "", ["IsToggled"] = "", ["MenuToggled"] = "", ["Extras"] = {}}
+                end
+                if (t) then
+                    ModListEnable(self.Name)
+                    Configs[self.Name]["IsToggled"] = true
+                    saveSettings()
+                else
+                    ModListDisable(self.Name)
+                    Configs[self.Name]["IsToggled"] = false
+                    saveSettings()
                 end
             end
             return self 
@@ -3232,19 +3255,33 @@ servContext:BindActionAtPriority('RL-ToggleMenu',function(_,uis)
 end,false,999999,Enum.KeyCode.RightShift)
 servContext:BindActionAtPriority('RL-Destroy',function(_,uis) 
     if (uis.Value == 0) then
-        ui:Destroy()
-    for i,v in pairs(ui_Connections) do 
-            v:Disconnect() 
+        for i,v in pairs(ui_Modules) do
+            if v:getState() == true then
+                v:Toggle(false, false)
+            end
         end
-    end
+        ui:Destroy()
+        _G.MLOADED = false
+        for i,v in pairs(ui_Connections) do 
+                v:Disconnect() 
+            end
+        end
 end,false,999999,Enum.KeyCode.RightControl)
 -- Auto collection
 delay(5, function() 
     if (ui_Menus ~= nil and #ui_Menus == 0) then
+        for i,v in pairs(ui_Modules) do
+            if v:getState() == true then
+                v:Toggle(false, false)
+            end
+        end
         ui:Destroy()
+        _G.MLOADED = false
         warn'[METEOR] Failure to clean library resources!\nAutomatically cleared for you; make sure to\ncall ui:Destroy() when finished'
     end
 end)
 end
+
+_G.MLOADED = true
 return ui
 
